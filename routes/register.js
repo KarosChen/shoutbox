@@ -8,15 +8,13 @@ exports.submit = (req, res, next) => {
   const data = req.body.user;
   User.getByName(data.name, (err, user) => {
     if (err) return next(err);
-    console.log(user.id);
     // index can't be 0
-    if (user.id) {
-      console.log(user.id);
+    if (user) {
       res.message("User name is existed");
       res.redirect("/register");
     } else {
       user = new User({
-        user: data.name,
+        name: data.name,
         pass: data.pass,
       });
       user.save((err) => {
@@ -27,7 +25,3 @@ exports.submit = (req, res, next) => {
     }
   });
 };
-
-// User.getByName("Karos", (err, user) => {
-//   console.log(user);
-// });

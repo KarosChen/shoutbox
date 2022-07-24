@@ -56,7 +56,9 @@ class User {
   insert(cb) {
     user
       .insertOne(JSON.parse(JSON.stringify(this)))
-      .then((res) => {})
+      .then((res) => {
+        cb();
+      })
       .catch((err) => {
         cb(err);
       });
@@ -77,7 +79,11 @@ class User {
   static getByName(name, cb) {
     User.getId(name, (err, id) => {
       if (err) return cb(err, null);
-      User.get(id, cb);
+      if (id) {
+        User.get(id, cb);
+      } else {
+        cb(null, null);
+      }
     });
   }
 
@@ -85,15 +91,14 @@ class User {
     user
       .findOne({ name: name }, { id: 1 })
       .then((res) => {
-        // when res is null, should deal it
+        //when res is null, should deal it
         if (res) {
           cb(null, res.id);
         } else {
-          cb(new Error(), null);
+          cb(null, null);
         }
       })
       .catch((err) => {
-        console.log(err);
         cb(err, null);
       });
   }
@@ -112,7 +117,7 @@ class User {
   static authenticate(name, pass, cb) {
     User.getByName(name, (err, user) => {
       if (err) return cb(err);
-      if (!user.id) return cb();
+      if (!user) return cb(null, null);
       bcrypt.hash(pass, user.salt, (err, hash) => {
         if (err) return cb(err);
         if (hash == user.pass) return cb(null, user);

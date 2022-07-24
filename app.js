@@ -11,6 +11,7 @@ var validate = require("./middlewares/validate");
 var register = require("./routes/register");
 var session = require("express-session");
 var messages = require("./middlewares/messages");
+var login = require("./routes/login");
 
 var app = express();
 // view engine setup
@@ -23,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({ secret: "secret", resave: false, saveUninitialized: true }));
-//app.use(messages);
+app.use(messages);
 
 app.use("/users", usersRouter);
 app.get("/", entries.list);
@@ -36,6 +37,9 @@ app.post(
 );
 app.get("/register", register.form);
 app.post("/register", register.submit);
+app.get("/login", login.form);
+app.post("/login", login.submit);
+app.get("/logout", login.logout);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
