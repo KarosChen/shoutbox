@@ -14,6 +14,7 @@ var validate = require("./middlewares/validate");
 var messages = require("./middlewares/messages");
 var user = require("./middlewares/user");
 var api = require("./routes/api");
+var Entry = require("./models/entry");
 var app = express();
 
 // view engine setup
@@ -26,7 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({ secret: "secret", resave: false, saveUninitialized: true }));
-app.user("/api", api.auth);
+app.use("/api", api.auth);
 app.use(user);
 
 app.use(messages);
@@ -47,6 +48,8 @@ app.post("/login", login.submit);
 app.get("/logout", login.logout);
 
 app.get("/api/user/:id", api.user);
+app.post("/api/entry", entries.submit);
+app.get("/api/entries", api.entries);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -6,6 +6,7 @@ exports.form = (req, res) => {
 
 exports.submit = (req, res) => {
   const user = res.locals.user;
+  const data = req.body.entry;
   const username = user ? user.name : null;
   const entry = new Entry({
     username: username,
@@ -14,7 +15,11 @@ exports.submit = (req, res) => {
   });
   entry.save((err) => {
     if (err) return next(err);
-    res.redirect("/");
+    if (req.remoteUser) {
+      res.send({ message: "Entry added" });
+    } else {
+      res.redirect("/");
+    }
   });
 };
 
