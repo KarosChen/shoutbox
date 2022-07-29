@@ -50,6 +50,9 @@ app.get("/logout", login.logout);
 app.get("/api/user/:id", api.user);
 app.post("/api/entry", entries.submit);
 app.get("/api/entries", api.entries);
+app.get("/api/test/:page?", (req, res) => {
+  res.send(`${req.query.page}`);
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

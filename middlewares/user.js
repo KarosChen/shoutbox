@@ -5,6 +5,7 @@ module.exports = (req, res, next) => {
     res.locals.user = req.remoteUser;
   }
   const uid = req.session.uid;
+  console.log(uid);
   if (!uid) return next();
   User.get(uid, (err, user) => {
     if (err) return next(err);
